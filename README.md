@@ -36,7 +36,9 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Authors
 
-* **Andrey Osipov** - *Initial work* - [web](https://web-analytics.me/)
+* **Andrey Osipov**  - [web](https://web-analytics.me/)
+[facebook](https://www.facebook.com/andrey.osipov)
+[telegram group](https://t.me/firebase_app_web_bigquery)
 
 
 ## License
