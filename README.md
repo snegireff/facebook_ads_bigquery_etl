@@ -1,20 +1,34 @@
 # Facebook ads to google bigQuery ETL
 
-One Paragraph of project description goes here
+ETL based on cloud function (google cloud) that retrieves data from the Facebook Insight API:
+
+AdsInsights.Field.account_id,
+AdsInsights.Field.campaign_id,
+AdsInsights.Field.campaign_name,
+AdsInsights.Field.adset_name,
+AdsInsights.Field.adset_id,
+AdsInsights.Field.ad_name,
+AdsInsights.Field.ad_id,
+AdsInsights.Field.spend,
+AdsInsights.Field.impressions,
+AdsInsights.Field.clicks,
+AdsInsights.Field.actions,
+AdsInsights.Field.conversions
+
+And Currency exchange rate from currencylayer.com.
+
+ETL uploads this data to Google Bigquery every day.
+
+
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your google cloud project for development and testing purposes.
 
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-```bash
-Give examples
-```
 
 ### Installing
+
+[Tutorial](https://medium.com/@snegir/writing-your-data-connector-from-facebook-ads-to-google-bigquery-670caeff8262?sk=ddd9d903a488864428b51f3e00423a40)
 
 A step by step series of examples that tell you how to get a development env running
 
@@ -51,20 +65,13 @@ gcloud beta scheduler jobs create pubsub converter --time-zone "Europe/Kiev" --s
 ```
 
 
-
-End with an example of getting some data out of the system or using it for a little demo
-
-
-
 ## Authors
 
 * **Andrey Osipov**  
 
-[web](https://web-analytics.me/)
-
-[facebook](https://www.facebook.com/andrey.osipov)
-
-[telegram group](https://t.me/firebase_app_web_bigquery)
+* [web](https://web-analytics.me/)
+* [facebook](https://www.facebook.com/andrey.osipov)
+* [telegram group](https://t.me/firebase_app_web_bigquery)
 
 
 ## License
