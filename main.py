@@ -96,7 +96,10 @@ def get_facebook_data(event, context):
     pubsub_message = base64.b64decode(event['data']).decode('utf-8')
     bigquery_client = bigquery.Client()
 
-    yesterday = date.today() - timedelta(1)
+    if 'date' in event['attributes']:
+        yesterday = event['attributes']['date'].strptime('%Y-%m-%d')
+    else:
+        yesterday = date.today() - timedelta(1)
 
     if pubsub_message == 'get_currency':
 
