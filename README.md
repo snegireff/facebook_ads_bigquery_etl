@@ -41,7 +41,7 @@ gcloud pubsub topics create facebook_run
 Publish cloud function:
 
 ```bash
-gcloud functions deploy get_facebook_data --runtime python37 --trigger-topic facebook_run --timeout=540 --memory=1024MB
+gcloud functions deploy get_facebook --runtime python37 --trigger-topic facebook_run --timeout=540 --memory=1024MB
 ```
 
 Create scheduler for facebook ads ETL:
@@ -67,7 +67,7 @@ gcloud beta scheduler jobs create pubsub converter --time-zone "Europe/Kiev" --s
 
 ## Authors
 
-* **Andrey Osipov**  
+* **Andrey Osipov**
 
 * [web](https://web-analytics.me/)
 * [facebook](https://www.facebook.com/andrey.osipov)
