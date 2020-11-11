@@ -41,7 +41,7 @@ gcloud pubsub topics create facebook_run
 Publish cloud function:
 
 ```bash
-gcloud functions deploy get_facebook --runtime python37 --trigger-topic facebook_run --timeout=540 --memory=1024MB
+gcloud functions deploy get_facebook_data --runtime python37 --trigger-topic facebook_run --timeout=540 --memory=1024MB
 ```
 
 Create scheduler for facebook ads ETL:
@@ -54,7 +54,7 @@ ACCOUNT_ID = your facebook account id without act_
 APP_ID, APP_SECRET, APP_TOKEN = from apps developers.facebook.com
 
 ```bash
-gcloud beta scheduler jobs create pubsub facebook --time-zone "Europe/Kiev" --schedule "0 5 * * *" --topic facebook_run --message-body "get_facebook_data" --attributes project_id=PROJECT_ID,dataset_id=DATASET_ID,table_id=TABLE_ID,account_id=ACCOUNT_ID,app_id=APP_ID,app_secret=APP_SECRET,access_token=ACCESS_TOKEN
+gcloud beta scheduler jobs create pubsub facebook --time-zone "Europe/Kiev" --schedule "0 5 * * *" --topic facebook_run --message-body "get_facebook" --attributes project_id=PROJECT_ID,dataset_id=DATASET_ID,table_id=TABLE_ID,account_id=ACCOUNT_ID,app_id=APP_ID,app_secret=APP_SECRET,access_token=ACCESS_TOKEN
 ```
 
 
