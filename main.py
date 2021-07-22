@@ -1,4 +1,4 @@
-from google.cloud import bigquery
+from google.cloud import bigquery, secretmanager
 from google.cloud.exceptions import NotFound
 from datetime import datetime, date, timedelta
 import requests
@@ -109,13 +109,19 @@ def get_facebook_data(event, context):
         table_id = event['attributes']['table_id']
         dataset_id = event['attributes']['dataset_id']
         project_id = event['attributes']['project_id']
-
-        app_id = event['attributes']['app_id']
-        app_secret = event['attributes']['app_secret']
-        access_token = event['attributes']['access_token']
         account_id = event['attributes']['account_id']
+        secret_id = event['attributes']['secret_id']
 
     try:
+        secretManager = SecretManager(
+            project_id, secret_id)
+
+        result = json.loads(secretManager.access_secret_version())
+
+        app_id = result["app_id"]
+        app_secret = result["app_secret"]
+        access_token = result["access_token"]
+
         FacebookAdsApi.init(app_id, app_secret, access_token)
 
         account = AdAccount('act_'+str(account_id))
@@ -199,3 +205,82 @@ def get_facebook_data(event, context):
                            dataset_id, project_id, fb_source)
 
             return 'ok'
+
+
+class SecretManager():
+    def __init__(self, project_id, secret_id):
+        self.project_id = project_id
+        self.secret_id = secret_id
+        # Create the Secret Manager client.
+        self.client = secretmanager.SecretManagerServiceClient()
+
+    # [START secretmanager_create_secret]
+
+    def create_secret(self):
+        """
+        Create a new secret with the given name. A secret is a logical wrapper
+        around a collection of secret versions. Secret versions hold the actual
+        secret material.
+        """
+
+        # Import the Secret Manager client library.
+
+        # Build the resource name of the parent project.
+        parent = f"projects/{self.project_id}"
+
+        # Create the secret.
+        response = self.client.create_secret(
+            request={
+                "parent": parent,
+                "secret_id": self.secret_id,
+                "secret": {"replication": {"automatic": {}}},
+            }
+        )
+        self.parent = self.client.secret_path(self.project_id, self.secret_id)
+        # Print the new secret name.
+        print("Created secret: {}".format(response.name))
+        # [END secretmanager_create_secret]
+
+        return response
+
+    # [START secretmanager_add_secret_version]
+
+    def add_secret_version(self, payload):
+        """
+        Add a new secret version to the given secret with the provided payload.
+        """
+
+        # Build the resource name of the parent secret.
+        parent = self.client.secret_path(self.project_id, self.secret_id)
+
+        # Convert the string payload into a bytes. This step can be omitted if you
+        # pass in bytes instead of a str for the payload argument.
+        payload = payload.encode("UTF-8")
+
+        # Add the secret version.
+        response = self.client.add_secret_version(
+            request={"parent": parent, "payload": {"data": payload}}
+        )
+
+        # # Print the new secret version name.
+        # print("Added secret version: {}".format(response.name))
+        # print("Plaintext: {}".format(payload))
+        # # [END secretmanager_add_secret_version]
+
+        return response
+
+    def access_secret_version(self, version_id=1):
+        """
+        Access the payload for the given secret version if one exists. The version
+        can be a version number as a string (e.g. "5") or an alias (e.g. "latest").
+        """
+
+        # Build the resource name of the secret version.
+        name = f"projects/{self.project_id}/secrets/{self.secret_id}/versions/{version_id}"
+
+        # Access the secret version.
+        response = self.client.access_secret_version(request={"name": name})
+
+        payload = response.payload.data.decode("UTF-8")
+
+        return payload
