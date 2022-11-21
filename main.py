@@ -97,7 +97,7 @@ def get_facebook_data(event, context):
     bigquery_client = bigquery.Client()
 
     if 'date' in event['attributes']:
-        yesterday = event['attributes']['date'].strftime('%Y-%m-%d')
+        yesterday = datetime.strptime(event['attributes']['date'], '%Y-%m-%d').date()
     else:
         yesterday = date.today() - timedelta(1)
 
